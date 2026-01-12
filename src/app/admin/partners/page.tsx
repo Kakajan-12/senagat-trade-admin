@@ -136,34 +136,35 @@ const HeaderImages = () => {
     const router = useRouter();
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const token = localStorage.getItem('auth_token');
+                if (!token) {
+                    router.push('/');
+                    return;
+                }
+
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/partners`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                setPartners(response.data);
+            } catch (err) {
+                const axiosError = err as AxiosError;
+                console.error(axiosError);
+                setError("Ошибка при получении данных");
+
+                if (axios.isAxiosError(axiosError) && axiosError.response?.status === 401) {
+                    router.push("/");
+                }
+            }
+        };
         fetchData();
-    }, []);
+    }, [router]);
 
-    const fetchData = async () => {
-        try {
-            const token = localStorage.getItem('auth_token');
-            if (!token) {
-                router.push('/');
-                return;
-            }
 
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/partners`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            setPartners(response.data);
-        } catch (err) {
-            const axiosError = err as AxiosError;
-            console.error(axiosError);
-            setError("Ошибка при получении данных");
-
-            if (axios.isAxiosError(axiosError) && axiosError.response?.status === 401) {
-                router.push("/");
-            }
-        }
-    };
 
     const handleDeleteClick = (id: number) => {
         setDeleteId(id);

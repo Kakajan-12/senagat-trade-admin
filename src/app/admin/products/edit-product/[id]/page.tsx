@@ -45,49 +45,48 @@ const EditProduct = () => {
     const [categoryId, setCategoryId] = useState<string>('');
 
     useEffect(() => {
+        const fetchProduct = async () => {
+            if (!id) return;
+
+            try {
+                const token = localStorage.getItem('auth_token');
+                if (!token) {
+                    router.push('/login');
+                    return;
+                }
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const productData: Product = await response.json();
+
+                setProduct(productData);
+                setNameEn(productData.name_en || '');
+                setTextEn(productData.text_en || '');
+                setNameRu(productData.name_ru || '');
+                setTextRu(productData.text_ru || '');
+
+                if (productData.category_id !== undefined && productData.category_id !== null) {
+                    setCategoryId(productData.category_id.toString());
+                }
+
+            } catch (err) {
+                console.error('Ошибка загрузки продукта:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchProduct();
         fetchCategories();
-    }, [id]);
-
-    const fetchProduct = async () => {
-        if (!id) return;
-
-        try {
-            const token = localStorage.getItem('auth_token');
-            if (!token) {
-                router.push('/login');
-                return;
-            }
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const productData: Product = await response.json();
-
-            setProduct(productData);
-            setNameEn(productData.name_en || '');
-            setTextEn(productData.text_en || '');
-            setNameRu(productData.name_ru || '');
-            setTextRu(productData.text_ru || '');
-
-            if (productData.category_id !== undefined && productData.category_id !== null) {
-                setCategoryId(productData.category_id.toString());
-            }
-
-        } catch (err) {
-            console.error('Ошибка загрузки продукта:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    }, [id, router]);
 
     const fetchCategories = async () => {
         try {

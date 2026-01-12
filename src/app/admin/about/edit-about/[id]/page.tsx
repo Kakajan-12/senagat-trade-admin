@@ -34,43 +34,42 @@ const EditAbout = () => {
     const [textRu, setTextRu] = useState('');
 
     useEffect(() => {
+        const fetchData = async () => {
+            if (!id) return;
+
+            try {
+                const token = localStorage.getItem('auth_token');
+                if (!token) {
+                    router.push('/login');
+                    return;
+                }
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/about/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                const aboutData: Card = await response.json();
+
+                setData(aboutData);
+                setTitleEn(aboutData.title_en || '');
+                setTextEn(aboutData.text_en || '');
+                setTitleRu(aboutData.title_ru || '');
+                setTextRu(aboutData.text_ru || '');
+            } catch (err) {
+                console.error('Ошибка загрузки', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchData();
-    }, [id]);
+    }, [id, router]);
 
-    const fetchData = async () => {
-        if (!id) return;
-
-        try {
-            const token = localStorage.getItem('auth_token');
-            if (!token) {
-                router.push('/login');
-                return;
-            }
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/about/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const aboutData: Card = await response.json();
-
-            setData(aboutData);
-            setTitleEn(aboutData.title_en || '');
-            setTextEn(aboutData.text_en || '');
-            setTitleRu(aboutData.title_ru || '');
-            setTextRu(aboutData.text_ru || '');
-        } catch (err) {
-            console.error('Ошибка загрузки', err);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
