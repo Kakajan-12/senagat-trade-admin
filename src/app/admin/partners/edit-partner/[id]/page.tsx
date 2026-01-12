@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Sidebar from '@/Components/Sidebar';
 import TokenTimer from '@/Components/TokenTimer';
+import NextImage from "next/image";
 
 interface DataItem {
     id: number;
@@ -162,7 +163,7 @@ const EditHeader = () => {
                                     <div className="border border-gray-300 rounded p-4 flex items-center justify-center h-64 bg-gray-50">
                                         {previewImage ? (
                                             <div className="relative w-full h-full">
-                                                <img
+                                                <NextImage
                                                     src={previewImage}
                                                     alt="Preview"
                                                     className="w-full h-full object-contain"

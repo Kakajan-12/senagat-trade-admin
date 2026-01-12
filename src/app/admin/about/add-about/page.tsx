@@ -8,7 +8,6 @@ import TipTapEditor from '@/Components/TipTapEditor';
 
 const AddAbout = () => {
     const [isClient, setIsClient] = useState(false);
-    const [loadingCategories, setLoadingCategories] = useState(true);
 
     const [titleEn, setTitleEn] = useState('');
     const [textEn, setTextEn] = useState('');

@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation';
 import Sidebar from '@/Components/Sidebar';
 import TokenTimer from '@/Components/TokenTimer';
 import { ArrowUpTrayIcon, PhotoIcon } from '@heroicons/react/16/solid';
+import NextImage from "next/image";
 
 const AddPartner = () => {
     const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -18,13 +19,11 @@ const AddPartner = () => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
 
-            // Проверка типа файла
             if (!file.type.startsWith('image/')) {
                 setError('Пожалуйста, выберите файл изображения');
                 return;
             }
 
-            // Проверка размера файла (максимум 5MB)
             if (file.size > 5 * 1024 * 1024) {
                 setError('Размер файла не должен превышать 5MB');
                 return;
@@ -33,7 +32,6 @@ const AddPartner = () => {
             setLogoFile(file);
             setError(null);
 
-            // Создаем превью
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreviewImage(reader.result as string);
@@ -67,7 +65,6 @@ const AddPartner = () => {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    // Не указываем Content-Type для FormData - браузер сам установит
                 },
                 body: formData,
             });
@@ -75,8 +72,6 @@ const AddPartner = () => {
             const responseData = await response.json();
 
             if (response.ok) {
-                // Показываем сообщение об успехе
-                alert('Партнер успешно добавлен!');
                 router.push('/admin/partners');
             } else {
                 setError(`Ошибка: ${responseData.error || 'Неизвестная ошибка'}`);
@@ -108,19 +103,17 @@ const AddPartner = () => {
                         >
                             <h2 className="text-2xl font-bold mb-6 text-gray-800">Добавить нового партнера</h2>
 
-                            {/* Поле для загрузки логотипа */}
                             <div className="mb-6">
                                 <label className="block text-gray-700 font-semibold mb-2">
                                     Логотип партнера*
                                 </label>
 
-                                {/* Инпут для файла */}
                                 <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-300 px-6 py-10">
                                     <div className="text-center">
                                         {previewImage ? (
                                             <div className="flex flex-col items-center">
                                                 <div className="relative w-48 h-48 mb-4 overflow-hidden rounded-lg bg-gray-100">
-                                                    <img
+                                                    <NextImage
                                                         src={previewImage}
                                                         alt="Предпросмотр логотипа"
                                                         className="w-full h-full object-contain p-4"
@@ -165,7 +158,6 @@ const AddPartner = () => {
                                     </div>
                                 </div>
 
-                                {/* Альтернативный инпут */}
                                 {!previewImage && (
                                     <div className="mt-4">
                                         <div className="flex items-center justify-center w-full">
@@ -199,7 +191,6 @@ const AddPartner = () => {
                                 </p>
                             </div>
 
-                            {/* Информация */}
                             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                                 <h3 className="font-semibold text-blue-800 mb-2">Требования к изображению:</h3>
                                 <ul className="text-sm text-blue-700 space-y-1">
@@ -210,7 +201,6 @@ const AddPartner = () => {
                                 </ul>
                             </div>
 
-                            {/* Кнопки действий */}
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <button
                                     type="button"
