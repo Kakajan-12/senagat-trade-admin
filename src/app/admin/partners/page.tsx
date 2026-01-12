@@ -27,15 +27,12 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message, isLoadi
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose}></div>
+            <div className="fixed inset-0 bg-black/50 transition-opacity" onClick={onClose}></div>
 
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                     <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                         <div className="sm:flex sm:items-start">
-                            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <ExclamationTriangleIcon className="h-6 w-6 text-red-600" />
-                            </div>
                             <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                 <h3 className="text-lg font-semibold leading-6 text-gray-900">
                                     {title}
@@ -86,15 +83,12 @@ const ErrorModal = ({ isOpen, onClose, title, message }: { isOpen: boolean; onCl
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose}></div>
+            <div className="fixed inset-0 bg-black/50 transition-opacity" onClick={onClose}></div>
 
             <div className="flex min-h-full items-center justify-center p-4">
                 <div className="relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md">
                     <div className="bg-white px-4 pb-4 pt-5 sm:p-6">
                         <div className="sm:flex sm:items-start">
-                            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
-                                <ExclamationTriangleIcon className="h-6 w-6 text-red-600" />
-                            </div>
                             <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                 <h3 className="text-lg font-semibold leading-6 text-gray-900">
                                     {title}
@@ -168,7 +162,7 @@ const HeaderImages = () => {
 
     const handleDeleteClick = (id: number) => {
         setDeleteId(id);
-        setModalMessage(`Вы уверены, что хотите удалить партнера #${id}? Это действие нельзя отменить.`);
+        setModalMessage(`Are you sure you want to remove your partner #${id}? This action cannot be undone.`);
         setShowDeleteModal(true);
     };
 
@@ -238,7 +232,7 @@ const HeaderImages = () => {
                 isOpen={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
                 onConfirm={confirmDelete}
-                title="Подтверждение удаления"
+                title="Confirm deletion"
                 message={modalMessage}
                 isLoading={loading}
             />
